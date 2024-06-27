@@ -53,7 +53,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         System.out.println(roomMasterSeq+"roomMasterSeq");
         MeetUpBoard meetUpBoard =meetUpBoardService.findMeetUpPeopleList(roomId);
         System.out.println("++++++meetupboard+++++++" + meetUpBoard.getMeetUpPeopleList());
-        String meetUpList = meetUpBoard.getMeetUpPeopleList();
+//        String meetUpList = meetUpBoard.getMeetUpPeopleList();
 //        if ( meetUpList == "[]" || meetUpList==null ) {
 //            System.out.println("정상");
 //        } else {
@@ -169,6 +169,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                     ws.sendMessage(new TextMessage(responseJson.toString()));
                     System.out.println("ws" + ws);
                     System.out.println("session" + session);
+
                     // 각 방과 사용자에 대해 메시지를 한 번만 로그함
                     if (ws == session) {  // 메시지를 수신한 세션에 대해서만 메시지 로그
                         MessageDTO messageDTO = MessageDTO.builder()

@@ -174,9 +174,7 @@ public ResponseEntity<?> selectImgBySeq(@RequestParam String meetUpDetailImg) {
     @GetMapping("/select/{interest}")
     public ResponseEntity<?>  selectAllByInterest(@PathVariable Long interest){
 
-        System.out.println(interest+"들어온인터레스트");
         Optional<Interest> interestOptional = interestRepository.findById(interest);
-        System.out.println("이게 null 이니?"+interestOptional);
         if(interestOptional.isPresent()){
 
             Interest forInterest= interestOptional.get();
