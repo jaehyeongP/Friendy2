@@ -73,7 +73,7 @@ public class CommunityBoardServiceImpl implements CommunityBoardService {
 
         if (communityBoards == null || communityBoards.isEmpty()) {
             log.warn("실명 게시물이 없습니다.");
-            throw new RuntimeException("실명 게시물이 없습니다.");
+            return null;
         }
 
         List<CommunityBoardDTO> communityBoardDTOs = communityBoards.stream()
@@ -93,7 +93,7 @@ public class CommunityBoardServiceImpl implements CommunityBoardService {
 
         if (communityBoards == null || communityBoards.isEmpty()) {
             log.warn("익명 게시물이 없습니다.");
-            throw new RuntimeException("익명 게시물이 없습니다.");
+            return null;
         }
 
         List<CommunityBoardDTO> communityBoardDTOs = communityBoards.stream()
