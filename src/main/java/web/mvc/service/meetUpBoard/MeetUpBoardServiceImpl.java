@@ -137,10 +137,6 @@ public class MeetUpBoardServiceImpl implements MeetUpBoardService {
         return "성공";
     }
 
-
-
-
-
     @Override
     public String updateBoard(MeetUpUpdateDTO meetUpUpdateDTO,List<MultipartFile> files) throws Exception {
 
@@ -149,12 +145,8 @@ public class MeetUpBoardServiceImpl implements MeetUpBoardService {
         MeetUpBoard meetUpBoardForImg = new MeetUpBoard();
         meetUpBoardForImg.setMeetUpSeq(meetUpUpdateDTO.getMeetUpSeq());
 
-
-
         if (files !=null) {
             meetUpBoardDetailImgRepository.deleteAllByMeetUpBoardSeq(meetUpUpdateDTO.getMeetUpSeq());
-
-
             for (MultipartFile file : files) {
                 Map<String, String> map = commonService.uploadFile(true, file, uploadDir);
                 MeetUpBoardDetailImg meetUpBoardDetailImg = new MeetUpBoardDetailImg();
@@ -167,8 +159,6 @@ public class MeetUpBoardServiceImpl implements MeetUpBoardService {
                 meetUpBoardDetailImgRepository.save(meetUpBoardDetailImg);
             }
         }
-
-
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String dateTime = meetUpUpdateDTO.getMeetUpDeadLine();
         String formattedDateTime = dateTime.replace("T", " ");
