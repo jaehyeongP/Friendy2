@@ -26,6 +26,7 @@
 ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-3.3.0.RELEASE-green?style=for-the-badge&logo=Spring&logoColor=white)
 ![Spring Security](https://img.shields.io/badge/Spring%20Security-3.3.0.RELEASE-green?style=for-the-badge&logo=Spring&logoColor=white)
 ![QueryDSL](https://img.shields.io/badge/QueryDSL-5.0-green?style=for-the-badge&logo=Java&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
 
 ### DataBase
 ![Oracle](https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white)
