@@ -1,16 +1,23 @@
 package web.mvc.controller.meetUpBoard;
 
 import lombok.AllArgsConstructor;
+import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import web.mvc.dto.meetUpBoard.MeetUpBoardDTO;
 import web.mvc.dto.meetUpBoard.MeetUpRequestDTO;
 import web.mvc.dto.user.UsersDTO;
 import web.mvc.entity.friend.FriendRequest;
+import web.mvc.entity.meetUpBoard.MeetUpBoard;
+import web.mvc.entity.meetUpBoard.MeetUpBoardList;
 import web.mvc.entity.meetUpBoard.MeetUpRequest;
 import web.mvc.entity.user.Users;
+import web.mvc.repository.meetUpBoard.MeetUpBoardRepository;
+import web.mvc.repository.meetUpBoard.MeetUpRequestRepository;
 import web.mvc.repository.user.UserRepository;
 import web.mvc.service.meetUpBoard.MeetUpRequestService;
+import web.mvc.service.meetUpBoard.MeetUpRequestServiceImpl;
 
 import java.util.*;
 
@@ -21,6 +28,9 @@ public class MeetUpRequestController {
 
     private final MeetUpRequestService meetUpRequestService;
     private final UserRepository userRepository;
+    private final MeetUpRequestServiceImpl meetUpRequestServiceImpl;
+    private final MeetUpBoardRepository meetUpBoardRepository;
+    private final MeetUpRequestRepository meetUpRequestRepository;
 
     @PostMapping(value = "/request", produces = "application/json; charset=UTF-8")
     public ResponseEntity<?> meetUpRequest(@ModelAttribute MeetUpRequestDTO meetUpRequestDTO) {
@@ -47,6 +57,7 @@ public class MeetUpRequestController {
     @GetMapping("/request/selectBySeq")
     public ResponseEntity<?> meetUpRequestCheck(@RequestParam Long meetUpSeq) {
         List<MeetUpRequest> list = meetUpRequestService.findAllReqestBySeq(meetUpSeq);
+        System.out.println("meetupSeq" + meetUpSeq + " || 12345");
         List<MeetUpRequestDTO> requestList = new ArrayList<>();
 
 
@@ -60,6 +71,7 @@ public class MeetUpRequestController {
                     .requestText(meetUpRequest.getRequestText())
                     .build();
             requestList.add(meetUpRequestDTO);
+
         }
 
 
@@ -71,23 +83,33 @@ public class MeetUpRequestController {
 
     public ResponseEntity<?> changeStatus(@RequestBody MeetUpRequestDTO meetUpRequestDTO) {
 
+        MeetUpBoard meetUpBoard = meetUpBoardRepository.findMeetUpBoardByMeetUpSeq(meetUpRequestDTO.getMeetUpSeq());
+        int maxEntry = meetUpBoard.getMeetUpMaxEntry();
+        int nowEntry = meetUpBoard.getNowEntry();
+        System.out.println(maxEntry + "|||" + nowEntry);
         int status = meetUpRequestDTO.getMeetUpRequestStatus();
         Long meetUpSeq = meetUpRequestDTO.getMeetUpSeq();
 
         Long userSeq = meetUpRequestDTO.getUserSeq();
         if (status == 1) {
-            meetUpRequestService.addMeetUpPeopleList(meetUpRequestDTO.getUserSeq(), meetUpRequestDTO.getMeetUpSeq());
+            if (maxEntry > nowEntry) {
+                meetUpRequestServiceImpl.test(meetUpRequestDTO);
+                System.out.println("여긴가 ? ");
+                meetUpBoardRepository.updateNowCount(nowEntry + 1, meetUpRequestDTO.getMeetUpSeq());
+                System.out.println("리스트 테스트2" + nowEntry);
+                String result2 = meetUpRequestService.updateStatusByReqSeq(status, meetUpSeq, userSeq);
+                System.out.println("상태가 변경되었습니다." + "||" + result2);
 
 
-            String result = meetUpRequestService.updateStatusByReqSeq(status, meetUpSeq, userSeq);
-
+            }
 
         } else if (status == 2) {
 
-            meetUpRequestService.deleteFromMeetUp(meetUpRequestDTO.getUserSeq(), meetUpRequestDTO.getMeetUpSeq());
-
-
+            System.out.println("여긴가요");
+            meetUpRequestRepository.deleteAllByMeetUpBoardListSeq(meetUpSeq, userSeq);
+            System.out.println("여긴가요2?");
             String result2 = meetUpRequestService.updateStatusByReqSeq(status, meetUpSeq, userSeq);
+
             return ResponseEntity.status(HttpStatus.OK).body("모임 참가가 거절되었습니다.");
 
 
@@ -130,5 +152,21 @@ public class MeetUpRequestController {
 
     }
 
+    @PostMapping(value = "/test")
+    public ResponseEntity<?> test(@RequestBody MeetUpRequestDTO meetUpRequestDTO) {
+        MeetUpBoard meetUpBoard = meetUpBoardRepository.findMeetUpBoardByMeetUpSeq(meetUpRequestDTO.getMeetUpSeq());
+        int maxEntry = meetUpBoard.getMeetUpMaxEntry();
+        int nowEntry = meetUpBoard.getNowEntry();
+
+        if (nowEntry < maxEntry) {
+            meetUpRequestServiceImpl.test(meetUpRequestDTO);
+            System.out.println("리스트 테스트");
+
+
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("test");
+
+    }
 
 }

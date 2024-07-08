@@ -37,8 +37,6 @@ public interface MeetUpBoardService {
 
     List<Date> findByPartySeq();
 
-//    Long insertImage(Long meetUpSeq , MultipartFile multipartFile);
-
 
     void checkDeadLine();
 

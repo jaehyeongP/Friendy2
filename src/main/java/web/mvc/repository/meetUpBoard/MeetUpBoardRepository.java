@@ -55,8 +55,9 @@ public interface MeetUpBoardRepository extends JpaRepository<MeetUpBoard, Long> 
 //
 
     @Modifying
-    @Query("update MeetUpBoard  p set p.meetUpPeopleList= ?1, p.nowEntry=?2 where p.meetUpSeq=?3")
-    int addMeetUpPeopleList(String meetUpPeopleList ,  int count , Long meetUpSeq);
+    @Transactional
+    @Query("update MeetUpBoard  p set  p.nowEntry=?1 where p.meetUpSeq=?2")
+    int updateNowCount(  int count ,  Long meetUpSeq);
 
 
     @Query("select m from MeetUpBoard  m where m.interest.interestCategory =?1")

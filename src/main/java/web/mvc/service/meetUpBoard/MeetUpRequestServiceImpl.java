@@ -6,14 +6,19 @@ import org.apache.catalina.User;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.mvc.dto.meetUpBoard.MeetUpBoardDTO;
+import web.mvc.dto.meetUpBoard.MeetUpBoardInviteListDTO;
 import web.mvc.dto.meetUpBoard.MeetUpRequestDTO;
 import web.mvc.entity.meetUpBoard.MeetUpBoard;
+import web.mvc.entity.meetUpBoard.MeetUpBoardList;
 import web.mvc.entity.meetUpBoard.MeetUpRequest;
 import web.mvc.entity.user.Users;
 import web.mvc.exception.common.ErrorCode;
 import web.mvc.exception.common.GlobalException;
+import web.mvc.repository.meetUpBoard.MeetUpBoardListRepository;
 import web.mvc.repository.meetUpBoard.MeetUpBoardRepository;
 import web.mvc.repository.meetUpBoard.MeetUpRequestRepository;
+import web.mvc.repository.user.MeetUpRepository;
 import web.mvc.repository.user.UserRepository;
 
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ public class MeetUpRequestServiceImpl implements MeetUpRequestService {
     final MeetUpRequestRepository meetUpRequestRepository;
     final MeetUpBoardRepository meetUpBoardRepository;
     final UserRepository userRepository;
+    private final MeetUpBoardListRepository meetUpBoardListRepository;
+
 
     @Override
     public String createMeetUpRequest(MeetUpRequestDTO meetUpRequestDTO) {
@@ -149,8 +156,8 @@ public class MeetUpRequestServiceImpl implements MeetUpRequestService {
                 int count=1;
                 JSONArray newJsonArray = new JSONArray(newList);
                 String newMeetUpList = newJsonArray.toString();
-                int result = meetUpBoardRepository.addMeetUpPeopleList(newMeetUpList,  count, meetUpSeq);
-                System.out.println("새로운 meetUpList 추가 결과: " + result);
+//                int result = meetUpBoardRepository.addMeetUpPeopleList(newMeetUpList,  count, meetUpSeq);
+//                System.out.println("새로운 meetUpList 추가 결과: " + result);
             } else{
                 // meetUpList가 null인 경우\
                 System.out.println("여기라고 ???");
@@ -176,12 +183,30 @@ public class MeetUpRequestServiceImpl implements MeetUpRequestService {
                 // String 으로 바꿔서 다시 업데이트 .
                 JSONArray updatedJsonArray = new JSONArray(list);
                 String updatedMeetUpList = updatedJsonArray.toString();
-                int result = meetUpBoardRepository.addMeetUpPeopleList(updatedMeetUpList, count+1 , meetUpSeq );
-                System.out.println("업데이트결과" + result);
+//                int result = meetUpBoardRepository.addMeetUpPeopleList(updatedMeetUpList, count+1 , meetUpSeq );
+//                System.out.println("업데이트결과" + result);
             }
         }
 
         return null;
+    }
+
+    @Override
+    public void test(MeetUpRequestDTO meetUpRequestDTO) {
+        MeetUpBoard meetUpBoard = MeetUpBoard.
+                builder()
+                .meetUpSeq(meetUpRequestDTO.getMeetUpSeq())
+                .build();
+        Users users = Users.builder()
+                .userSeq(meetUpRequestDTO.getUserSeq()).build();
+        MeetUpBoardList meetUpBoardList = MeetUpBoardList.builder()
+                .meetUpBoard(meetUpBoard)
+                .user(users)
+                .build();
+
+        System.out.println("testing 서비스");
+        meetUpBoardListRepository.save(meetUpBoardList);
+
     }
 
 
@@ -214,8 +239,8 @@ public class MeetUpRequestServiceImpl implements MeetUpRequestService {
                     JSONArray updatedJsonArray = new JSONArray(list);
                     String updatedMeetUpList = updatedJsonArray.toString();
                     System.out.println("카운트-1"+count);
-                    int result = meetUpBoardRepository.addMeetUpPeopleList(updatedMeetUpList, count-1, meetUpSeq);
-                    System.out.println("삽입결과?" + result);
+//                    int result = meetUpBoardRepository.addMeetUpPeopleList(updatedMeetUpList, count-1, meetUpSeq);
+//                    System.out.println("삽입결과?" + result);
                     break;
                 }
             }

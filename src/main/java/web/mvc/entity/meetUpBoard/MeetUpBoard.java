@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MeetUpBoard {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meetup_seq")
     @SequenceGenerator(allocationSize = 1, sequenceName = "meetup_seq", name = "meetup_seq")
@@ -44,12 +45,12 @@ public class MeetUpBoard {
     @OneToMany(mappedBy = "meetUpBoard", cascade = CascadeType.ALL)
     private List<MeetUpRequest> meetUpRequestsList;
 
-//    @OneToMany(mappedBy = "meetUpBoard", cascade = CascadeType.ALL)
-//    private List<Interest> interestList;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "interest_seq")
     private Interest interest;
+
+    @OneToMany(mappedBy = "meetUpBoard", cascade = CascadeType.ALL)
+    private List<MeetUpBoardList> meetUpBoardList;
 
     @OneToOne(mappedBy = "meetUpBoard", cascade = CascadeType.ALL)
     private MeetupRecord meetupRecord;
@@ -63,11 +64,12 @@ public class MeetUpBoard {
     private int meetUpPwd;
 
     private int meetUpMaxEntry;
+
     @ColumnDefault("0")
     private int nowEntry;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="chattingroom_seq")
+    @JoinColumn(name = "chattingroom_seq")
     private ChattingRoom chattingroom;
 
     private Date meetUpDeadLine;

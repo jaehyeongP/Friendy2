@@ -1,5 +1,6 @@
 package web.mvc.repository.meetUpBoard;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +21,10 @@ public interface MeetUpRequestRepository extends JpaRepository<MeetUpRequest, Lo
     List<Long> findUserSeqByMeetUpReqSeq(Long meetUpReqSeq);
 
 
-
+    @Modifying
+    @Transactional
+    @Query("delete from MeetUpBoardList where meetUpBoard.meetUpSeq=?1 and user.userSeq=?2")
+    void deleteAllByMeetUpBoardListSeq(Long userSeq, Long meetUpBoardSeq);
 
 
 
